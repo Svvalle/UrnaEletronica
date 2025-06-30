@@ -1,25 +1,78 @@
 /* Estilos para a Urna Eletrônica */
 
 .urna-container {
-    background: #2c3e50;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    max-width: 800px;
-    width: 100%;
-    margin: 20px auto;
-    margin-top: 2000px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .urna-header {
-    text-align: center;
-    color: white;
-    margin-bottom: 30px;
-  }
-  
-  .urna-header h1 {
-    margin: 0;
+  background: rgb(209, 209, 209);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 20px 20px 40px rgb(8, 6, 0);
+  max-width: 800px;
+  width: 100%;
+  margin: 20px auto;
+  /*margin-top: 2000px;*/
+  font-family: Arial, sans-serif;
+  margin-left: 450px;
+}
+
+body.dark-theme .urna-container {
+  background: #2c3e50; /* Fundo mais escuro */
+  color: #e0e0e0; /* Texto mais claro */
+  box-shadow: 20px 20px 40px rgb(0, 17, 255); /* Sombra mais sutil */
+}
+
+.logo-senai{
+  width: 100px;
+  height: 100px;
+}
+
+#themeToggle{
+  background: #2c3e50;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 780px;
+}
+
+#themeToggle:hover {
+  background: #34495e;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+  background-color: #1a1e29;
+  color: #ffffff;
+}
+
+body.dark-theme #themeToggle {
+  background: #3498db;
+}
+
+body.dark-theme #themeToggle:hover {
+  background: #2980b9;
+}
+
+.urna-header {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin-bottom: 30px;
+}
+
+body.dark-theme .urna-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+
+.urna-header h1 {
+  margin: 0;
     font-size: 2.5em;
   }
   
@@ -30,7 +83,17 @@
   }
   
   .screen {
-    background: #34495e;
+    background: #a8a8a8;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    min-height: 400px;
+    box-shadow: inset 0 5px 15px rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  body.dark-theme .screen {
+    background: #0d2838;
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;

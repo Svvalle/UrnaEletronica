@@ -307,6 +307,7 @@ const UrnaEletronica = () => {
         {telaAtual === 'login' && (
           <div className="login-screen">
             <h2>🔐 Identificação do Eleitor</h2>
+            <img className='logo-senai' src='images/logo_senai-removebg-preview.png'></img>
             <div className="input-group">
               <label>Digite sua matrícula:</label>
               <input
