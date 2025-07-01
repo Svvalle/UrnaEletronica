@@ -314,8 +314,8 @@ const UrnaEletronica = () => {
                 type="text"
                 value={matriculaInput}
                 onChange={(e) => setMatriculaInput(e.target.value)}
-                placeholder="Ex: 12345"
-                maxLength="10"
+                placeholder="Ex: 123456"
+                maxLength="6"
                 onKeyPress={(e) => e.key === 'Enter' && validarEleitor()}
               />
             </div>
