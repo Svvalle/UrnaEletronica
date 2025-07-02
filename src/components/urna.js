@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import './urna.css';
+import '../styles/urna.css';
 
 const UrnaEletronica = () => {
   // Estados principais
@@ -23,6 +23,79 @@ const UrnaEletronica = () => {
       nulo: 0
     }
   });
+
+  const [votacao, setVotacao] = useState(
+    [
+      {
+        cargo: "Representante de Turma",
+        representantes: [
+          {
+            nome: "Joao",
+            votosRep: 0
+          },
+          {
+            nome: "Pedro",
+            votos: 0
+          },
+          {
+            nome: "Rogério",
+            votos: 0
+          },
+          {
+            brancos: 0,
+            nulos: 0
+          }
+        ]       
+      },
+      {
+        cargo: "Monitor",
+        representantes: [
+          {
+            nome: "Gabriel",
+            votosRep: 0
+          },
+          {
+            nome: "Pedro",
+            votos: 0
+          },
+          {
+            nome: "Marcelo",
+            votos: 0
+          },
+          {
+            brancos: 0,
+            nulos: 0
+          }
+        ]
+      },
+      {
+        cargo: "Orador",
+        representantes: [
+          {
+            nome: "Matheus",
+            votosRep: 0
+          },
+          {
+            nome: "Daniel",
+            votos: 0
+          },
+          {
+            nome: "Felipe",
+            votos: 0
+          },
+          {
+            brancos: 0,
+            nulos: 0
+          }
+        ]
+      }
+    ]);
+
+  // votacao[0].representantes.map((representante) => {
+  //   (
+  //     <CardRepresentante nome:{representante.nome}/>
+  //   )
+  // }
 
   // Candidatos por posição
   const candidatos = {
