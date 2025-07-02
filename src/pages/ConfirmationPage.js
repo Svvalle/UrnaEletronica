@@ -43,16 +43,11 @@ const ConfirmationPage = ({
         {renderVoteReview()}
       </div>
 
-      <div className="controls">
-        <button className="btn btn-danger" onClick={voltarVotacao}>
-          ← Voltar e Alterar
-        </button>
-        <button className="btn btn-success" onClick={confirmarVotos}>
-          ✓ Confirmar Votos
-        </button>
-      </div>
-    </div>
-  );
-};
+      <ConfirmationControls
+              onBack={voltarVotacao}
+              onConfirm={confirmarVotos}
+            />
+          </div>
+        )}
 
 export default ConfirmationPage;

@@ -12,16 +12,11 @@ const SuccessPage = ({ eleitorAtual, proximoEleitor, setTelaAtual }) => {
         Seus votos foram registrados com segurança.
       </p>
 
-      <div className="controls">
-        <button className="btn btn-primary" onClick={proximoEleitor}>
-          Próximo Eleitor
-        </button>
-        <button className="btn btn-warning" onClick={() => setTelaAtual('resultados')}>
-          Ver Resultados
-        </button>
-      </div>
-    </div>
-  );
-};
+      <SuccessControls
+              onNextVoter={proximoEleitor}
+              onViewResults={() => setTelaAtual('resultados')}
+            />
+          </div>
+        )}
 
 export default SuccessPage;

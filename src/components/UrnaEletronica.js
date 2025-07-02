@@ -11,7 +11,7 @@ import ResultsPage from '../pages/ResultsPage';
 import { candidatos, posicoes, getInitialVotes } from '../utils/candidatos';
 import { contabilizarVoto, calcularResultados } from '../utils/helpers';
 import '../styles/urna.css';
- 
+
 const UrnaEletronica = () => {
   // Estados principais
   const [eleitoresQueVotaram, setEleitoresQueVotaram] = useState(new Set());
