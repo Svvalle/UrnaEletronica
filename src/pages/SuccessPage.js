@@ -20,3 +20,4 @@ const SuccessPage = ({ eleitorAtual, proximoEleitor, setTelaAtual }) => {
         )}
 
 export default SuccessPage;
+

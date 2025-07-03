@@ -140,10 +140,19 @@ const UrnaEletronica = () => {
       <Header />
       <div className="screen">
         <Alert alerta={alerta} />
-        
+
         {telaAtual === 'login' && <LoginPage {...sharedProps} />}
         {telaAtual === 'votacao' && <VotingPage {...sharedProps} />}
-        {telaAtual === 'confirmacao' && <ConfirmationPage {...sharedProps} />}
+        {telaAtual === 'confirmacao' && (
+          <ConfirmationPage
+            candidatos={candidatos}
+            posicoes={posicoes}
+            eleitorAtual={eleitorAtual}
+            votosAtuais={votosAtuais}
+            voltarVotacao={voltarVotacao}
+            confirmarVotos={confirmarVotos}
+          />
+        )}
         {telaAtual === 'sucesso' && <SuccessPage {...sharedProps} />}
         {telaAtual === 'resultados' && <ResultsPage {...sharedProps} />}
       </div>
@@ -152,3 +161,4 @@ const UrnaEletronica = () => {
 };
 
 export default UrnaEletronica;
+
