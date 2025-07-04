@@ -1,118 +1,54 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import '../styles/urna.css';
+import React, { useRef, useState } from 'react';
+import '../app/urna.css';
 
 const UrnaEletronica = () => {
   // Estados principais
   const [eleitoresQueVotaram, setEleitoresQueVotaram] = useState(new Set());
   const [votos, setVotos] = useState({
     representante: {
-      candidatos: { pedro: 0, joao: 0, rogerio: 0 },
+      candidatos: { romolo: 0, natan: 0, kleiverson: 0 },
       branco: 0,
       nulo: 0
     },
     monitor: {
-      candidatos: { pedro: 0, gabriel: 0, marcelo: 0 },
+      candidatos: { nicolas: 0, estevao: 0, david: 0 },
       branco: 0,
       nulo: 0
     },
     orador: {
-      candidatos: { matheus: 0, daniel: 0, felipe: 0 },
+      candidatos: { arthur: 0, robson: 0, walquer: 0 },
       branco: 0,
       nulo: 0
     }
   });
 
-  const [votacao, setVotacao] = useState(
-    [
-      {
-        cargo: "Representante de Turma",
-        representantes: [
-          {
-            nome: "Joao",
-            votosRep: 0
-          },
-          {
-            nome: "Pedro",
-            votos: 0
-          },
-          {
-            nome: "Rogério",
-            votos: 0
-          },
-          {
-            brancos: 0,
-            nulos: 0
-          }
-        ]       
-      },
-      {
-        cargo: "Monitor",
-        representantes: [
-          {
-            nome: "Gabriel",
-            votosRep: 0
-          },
-          {
-            nome: "Pedro",
-            votos: 0
-          },
-          {
-            nome: "Marcelo",
-            votos: 0
-          },
-          {
-            brancos: 0,
-            nulos: 0
-          }
-        ]
-      },
-      {
-        cargo: "Orador",
-        representantes: [
-          {
-            nome: "Matheus",
-            votosRep: 0
-          },
-          {
-            nome: "Daniel",
-            votos: 0
-          },
-          {
-            nome: "Felipe",
-            votos: 0
-          },
-          {
-            brancos: 0,
-            nulos: 0
-          }
-        ]
-      }
-    ]);
-
-  // votacao[0].representantes.map((representante) => {
-  //   (
-  //     <CardRepresentante nome:{representante.nome}/>
-  //   )
-  // }
+  // Lista de eleitores cadastrados (matrícula: nome)
+const eleitoresCadastrados = {
+  '0159798': 'Sávio Valle',
+  '0063538': 'Rafael Couto',
+  '345678': 'Larissa Lima',
+  '456789': 'Natan ',
+  '567890': 'Mariana Souza'
+};
 
   // Candidatos por posição
   const candidatos = {
     representante: [
-      { numero: 1, nome: 'Pedro' },
-      { numero: 2, nome: 'João' },
-      { numero: 3, nome: 'Rogério' }
+      { numero: 1, nome: 'Rômolo' },
+      { numero: 2, nome: 'Natan' },
+      { numero: 3, nome: 'Kleiverson' }
     ],
     monitor: [
-      { numero: 1, nome: 'Pedro' },
-      { numero: 2, nome: 'Gabriel' },
-      { numero: 3, nome: 'Marcelo' }
+      { numero: 1, nome: 'Nicolas' },
+      { numero: 2, nome: 'Estevão' },
+      { numero: 3, nome: 'David' }
     ],
     orador: [
-      { numero: 1, nome: 'Matheus' },
-      { numero: 2, nome: 'Daniel' },
-      { numero: 3, nome: 'Felipe' }
+      { numero: 1, nome: 'Arthur' },
+      { numero: 2, nome: 'Robson' },
+      { numero: 3, nome: 'Walquer' }
     ]
   };
 
@@ -125,6 +61,8 @@ const UrnaEletronica = () => {
   const [alerta, setAlerta] = useState({ mensagem: '', tipo: '' });
   const [matriculaInput, setMatriculaInput] = useState('');
 
+  const audio = useRef(null);
+
   // Função para mostrar alertas
   const mostrarAlerta = (mensagem, tipo = 'error') => {
     setAlerta({ mensagem, tipo });
@@ -134,22 +72,29 @@ const UrnaEletronica = () => {
   // Validar eleitor
   const validarEleitor = () => {
     const matricula = matriculaInput.trim();
-
+  
     if (!matricula) {
       mostrarAlerta('Por favor, digite uma matrícula válida.', 'error');
       return;
     }
-
+  
+    if (!eleitoresCadastrados.hasOwnProperty(matricula)) {
+      mostrarAlerta('Matrícula não encontrada. Verifique com a organização.', 'error');
+      return;
+    }
+  
     if (eleitoresQueVotaram.has(matricula)) {
       mostrarAlerta('Esta matrícula já votou! Cada eleitor pode votar apenas uma vez.', 'error');
       return;
     }
-
+  
     setEleitorAtual(matricula);
+    setEleitorAtual(eleitoresCadastrados[matricula]);
     setMatriculaInput('');
     resetVotosAtuais();
     setTelaAtual('votacao');
   };
+  
 
   // Reset dos votos atuais
   const resetVotosAtuais = () => {
@@ -200,7 +145,7 @@ const UrnaEletronica = () => {
     setTelaAtual('sucesso');
   };
 
-  // Contabilizar voto
+  // Contabilizar voto - FUNÇÃO CORRIGIDA
   const contabilizarVoto = (votosObj, posicao, voto) => {
     if (voto === 'branco') {
       votosObj[posicao].branco++;
@@ -209,11 +154,31 @@ const UrnaEletronica = () => {
     } else {
       const candidato = candidatos[posicao].find(c => c.numero === voto);
       if (candidato) {
-        const nomeKey = candidato.nome.toLowerCase();
-        votosObj[posicao].candidatos[nomeKey]++;
+        // Normalizando o nome do candidato para minúsculo e removendo acentos
+        const nomeKey = candidato.nome.toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
+
+        // Verificação se a chave existe no objeto de candidatos
+        if (votosObj[posicao].candidatos.hasOwnProperty(nomeKey)) {
+          votosObj[posicao].candidatos[nomeKey]++;
+        } else {
+          console.warn(`Candidato ${nomeKey} não encontrado em ${posicao}`);
+        }
       }
     }
   };
+
+  const playBarulin = () => {
+    try {
+      audio.current.volume = 0.3;
+      audio.current.play();
+    } catch (error) {
+      console.log('Erro ao tocar som:', error);
+    }
+  };
+
+
 
   // Próximo eleitor
   const proximoEleitor = () => {
@@ -263,17 +228,17 @@ const UrnaEletronica = () => {
       setEleitoresQueVotaram(new Set());
       setVotos({
         representante: {
-          candidatos: { pedro: 0, joao: 0, rogerio: 0 },
+          candidatos: { romolo: 0, natan: 0, kleiverson: 0 },
           branco: 0,
           nulo: 0
         },
         monitor: {
-          candidatos: { pedro: 0, gabriel: 0, marcelo: 0 },
+          candidatos: { nicolas: 0, estevao: 0, david: 0 },
           branco: 0,
           nulo: 0
         },
         orador: {
-          candidatos: { matheus: 0, daniel: 0, felipe: 0 },
+          candidatos: { arthur: 0, robson: 0, walquer: 0 },
           branco: 0,
           nulo: 0
         }
@@ -311,19 +276,32 @@ const UrnaEletronica = () => {
     });
   };
 
-  // Render resultado por posição
+  // Render resultado por posição - ORDENADO POR VOTOS
   const renderResultadoPosicao = (titulo, posicao, resultado) => {
     const votosPos = votos[posicao];
     const votosCandidatos = votosPos.candidatos;
     const totalVotos = Object.values(votosCandidatos).reduce((a, b) => a + b, 0) + votosPos.branco + votosPos.nulo;
+
+    // Ordenar candidatos por número de votos (maior para menor)
+    const candidatosOrdenados = Object.entries(votosCandidatos)
+      .sort(([nomeA, votosA], [nomeB, votosB]) => {
+        // Primeiro critério: número de votos (decrescente)
+        if (votosB !== votosA) {
+          return votosB - votosA;
+        }
+        // Segundo critério: ordem alfabética (crescente) para casos de empate
+        return nomeA.localeCompare(nomeB);
+      });
 
     return (
       <div key={posicao} className="results-section">
         <h3>{titulo}</h3>
 
         <h4>📋 Candidatos:</h4>
-        {Object.entries(votosCandidatos).map(([nome, quantidade]) => {
-          const percentage = totalVotos > 0 ? (quantidade / totalVotos * 100) : 0;
+        {candidatosOrdenados.map(([nome, quantidade]) => {
+          // Verificação para evitar NaN
+          const votosValidos = typeof quantidade === 'number' && !isNaN(quantidade) ? quantidade : 0;
+          const percentage = totalVotos > 0 ? (votosValidos / totalVotos * 100) : 0;
           const isWinner = resultado.vencedor && nome === resultado.vencedor.toLowerCase();
           const isTie = resultado.empate && resultado.vencedores && resultado.vencedores.includes(nome);
 
@@ -331,7 +309,7 @@ const UrnaEletronica = () => {
             <div key={nome}>
               <div className={`result-item ${isWinner && !resultado.empate ? 'winner' : ''} ${isTie ? 'tie' : ''}`}>
                 <span>{nome.charAt(0).toUpperCase() + nome.slice(1)}</span>
-                <span>{quantidade} voto{quantidade !== 1 ? 's' : ''} ({percentage.toFixed(1)}%)</span>
+                <span>{votosValidos} voto{votosValidos !== 1 ? 's' : ''} ({percentage.toFixed(1)}%)</span>
               </div>
               <div className="progress-bar">
                 <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
@@ -364,6 +342,7 @@ const UrnaEletronica = () => {
   // Componente principal
   return (
     <div className="urna-container">
+      <audio ref={audio} src="sounds/Barulin.mp3"></audio>
       <div className="urna-header">
         <h1>🗳️ URNA ELETRÔNICA</h1>
         <p>Sistema de Votação Digital</p>
@@ -380,7 +359,6 @@ const UrnaEletronica = () => {
         {telaAtual === 'login' && (
           <div className="login-screen">
             <h2>🔐 Identificação do Eleitor</h2>
-            <img className='logo-senai' src='images/logo_senai-removebg-preview.png'></img>
             <div className="input-group">
               <label>Digite sua matrícula:</label>
               <input
@@ -388,7 +366,7 @@ const UrnaEletronica = () => {
                 value={matriculaInput}
                 onChange={(e) => setMatriculaInput(e.target.value)}
                 placeholder="Ex: 123456"
-                maxLength="6"
+                maxLength="7"
                 onKeyPress={(e) => e.key === 'Enter' && validarEleitor()}
               />
             </div>
@@ -443,7 +421,7 @@ const UrnaEletronica = () => {
 
             <div className="controls">
               {votosAtuais[posicaoAtual] ? (
-                <button className="btn btn-success" onClick={proximaPosicao}>
+                <button className="btn btn-success" onClick={() => { playBarulin(); proximaPosicao(); }}>
                   {indicePosicao < posicoes.length - 1 ? 'Próximo Cargo' : 'Revisar Votos'}
                 </button>
               ) : (

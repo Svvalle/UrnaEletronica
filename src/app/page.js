@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
-import UrnaEletronica from "../components/UrnaEletronica";
-import LoginPage from "./login-page/page";
-//import styles from "../app/urna.css"
+import UrnaEletronica from "../components/urna.js";
 
 export default function Home() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -34,8 +32,7 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      {/* <UrnaEletronica/> */}
-      <LoginPage/> 
+      <UrnaEletronica/> 
       <button id="themeToggle" onClick={toggleTheme}>
         {isDarkTheme ? "☀️ Alterar Tema" : "🌙 Alterar Tema"}
       </button>

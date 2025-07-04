@@ -7,7 +7,7 @@
   width: 100%;
   margin: 20px auto;
   font-family: Arial, sans-serif;
-  margin-left: 450px;
+  margin-left: 450px;  
 }
 
 body.dark-theme .urna-container {
@@ -41,6 +41,7 @@ body {
   color: #000000;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 
 body.dark-theme {
   background-color: #1a1e29;
